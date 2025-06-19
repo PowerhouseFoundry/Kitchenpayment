@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Screen</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Helvetica, sans-serif;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+      background-color: #ffffff;
+    }
+    .screen.active {
+      display: flex;
+    }
+    .button-row {
+      display: flex;
+      gap: 40px;
+      margin: 40px 0;
+    }
+    .pay-button {
+      width: 40vw;
+      height: 40vw;
+      max-width: 300px;
+      max-height: 300px;
+      background: #ffffff;
+      border: 4px solid green;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      color: green;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .pay-button img {
+      max-height: 160px;
+      margin-bottom: 10px;
+    }
+    .pay-button:nth-child(2) img {
+      max-height: 200px;
+    }
+    .back-button {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      background: #ccc;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .symbol {
+      max-height: 200px;
+      margin: 20px;
+    }
+    .message {
+      font-size: 2rem;
+      margin-top: 20px;
+      color: green;
+    }
+    .waiting-message {
+      font-size: 2rem;
+      margin-top: 20px;
+      color: black;
+    }
+    .dots::after {
+      content: '';
+      display: inline-block;
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+  </style>
+</head>
+<body>
+  <div id="home" class="screen active">
+    <div class="button-row">
+      <div class="pay-button" onclick="goToCash()">
+        <img src="cash.jpg" alt="Cash Symbol">
+        Cash
+      </div>
+      <div class="pay-button" onclick="goToCard()">
+        <img src="card.jpg" alt="Card Symbol">
+        Card/Contactless
+      </div>
+    </div>
+  </div>
+
+  <div id="cash" class="screen">
+    <img src="cash.jpg" class="symbol" alt="Pay Cash Symbol">
+    <div class="message">Pay the Cashier</div>
+    <div class="back-button" onclick="goHome()">Back</div>
+  </div>
+
+  <div id="card" class="screen">
+    <img src="tap.jpg" class="symbol" alt="Tap Card Symbol">
+    <div class="message">Tap your card</div>
+  </div>
+
+  <div id="waiting" class="screen">
+    <div class="waiting-message">Please Wait<span class="dots"></span></div>
+  </div>
+
+  <div id="success" class="screen">
+    <img src="checkmark.png" class="symbol" alt="Success Symbol">
+    <div class="message">Payment Accepted</div>
+  </div>
+
+  <script>
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function goHome() {
+      showScreen('home');
+    }
+
+    function goToCash() {
+      showScreen('cash');
+    }
+
+    function goToCard() {
+      showScreen('card');
+      setTimeout(() => {
+        showScreen('waiting');
+        setTimeout(() => {
+          showScreen('success');
+          setTimeout(goHome, 5000);
+        }, 3000);
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
